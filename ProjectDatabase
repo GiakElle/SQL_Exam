@@ -1,0 +1,108 @@
+CREATE DATABASE Project;
+
+use Project;
+
+CREATE TABLE Alunno
+    (
+        CF              varchar(16) NOT NULL,
+        nome            varchar(16) NOT NULL,
+        cognome         varchar(16) NOT NULL,
+        data_nascita    date NOT NULL,
+        sostegno        bit(1),
+        PRIMARY KEY     (CF)
+    );
+
+CREATE TABLE Insegnante
+    (
+        CF              varchar(16) NOT NULL,
+        nome            varchar(16) NOT NULL,
+        cognome         varchar(16) NOT NULL,
+        data_nascita    date NOT NULL,
+        di_ruolo        bit(1),
+        materia         bit(1),
+        PRIMARY KEY     (CF)
+    );
+
+CREATE TABLE Scuola
+    (
+        id              varchar(16) NOT NULL,
+        nome            varchar(16) NOT NULL,
+        telefono        int NOT NULL,
+        tipo            varchar(16) NOT NULL,
+        tempoPieno      bit(1),
+        PRIMARY KEY     (id)
+    );
+
+CREATE TABLE Plesso
+    (
+        id              int NOT NULL,
+        indirizzo       varchar(16) NOT NULL,
+        piani           int NOT NULL,
+        ascensore       bit(1),
+        PRIMARY KEY     (id)
+    );
+
+CREATE TABLE FasciaEtà
+    (
+        nome            varchar(16) NOT NULL,
+        min             int NOT NULL,
+        max             int NOT NULL,
+        PRIMARY KEY     (nome)
+    );
+
+CREATE TABLE Classe
+    (
+        id              varchar(16) NOT NULL,
+        numero          int NOT NULL,
+        lettera         varchar(16) NOT NULL,
+        id_scuola       varchar(16) NOT NULL,
+        PRIMARY KEY     (id),
+        FOREIGN KEY     (id_scuola) REFERENCES Scuola(id)
+    );
+
+CREATE TABLE Aula
+    (
+        id              varchar(16) NOT NULL,
+        mq              int NOT NULL,
+        #max:sud        int NOT NULL,
+        nome_fasciaEtà  varchar(16) NOT NULL,
+        id_plesso       int NOT NULL,
+        PRIMARY KEY     (id),
+        FOREIGN KEY     (nome_fasciaEtà) REFERENCES FasciaEtà(nome),
+        FOREIGN KEY     (id_plesso) REFERENCES Plesso(id)
+    );
+
+CREATE TABLE Insegna
+    (
+        id_ins          varchar(16) NOT NULL,
+        id_classe       varchar(16) NOT NULL,
+        AnnoScol        int NOT NULL,
+        ore             int,
+        numerosa        int,
+        PRIMARY KEY     (id_ins, id_classe, AnnoScol),
+        FOREIGN KEY     (id_ins) REFERENCES Insegnante(CF),
+        FOREIGN KEY     (id_classe) REFERENCES Classe(id)
+    );
+
+CREATE TABLE Assegnamento
+    (
+        id_classe       varchar(16) NOT NULL,
+        id_aula         varchar(16) NOT NULL,
+        AnnoScol        int NOT NULL,
+        PRIMARY KEY     (id_classe, id_aula, AnnoScol),
+        FOREIGN KEY     (id_classe) REFERENCES Classe(id),
+        FOREIGN KEY     (id_aula) REFERENCES Aula(id)
+    );
+
+CREATE TABLE StoricoIscrizione
+    (
+        id_alunno       varchar(16) NOT NULL,
+        id_classe       varchar(16) NOT NULL,
+        AnnoScol        int NOT NULL,
+        data_iscrizione date,
+        PRIMARY KEY     (id_alunno, id_classe, AnnoScol),
+        FOREIGN KEY     (id_alunno) REFERENCES Alunno(CF),
+        FOREIGN KEY     (id_classe) REFERENCES Classe(id)
+    );
+
+describe tables;
