@@ -31,7 +31,7 @@ CREATE TABLE Scuola
         tipo            varchar(16) NOT NULL,
         tempoPieno      bit(1),
         PRIMARY KEY     (id)
-        CHECK           (tipo = 'SI' OR tipo = 'SP' OR tipo = 'SS')
+        #CHECK           (tipo = 'SI' OR tipo = 'SP' OR tipo = 'SS')
         #ricordarsi di mettere il vincolo di integrità tempo pieno null se tipo='SI'
     );
 
