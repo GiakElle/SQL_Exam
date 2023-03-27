@@ -8,7 +8,7 @@ CREATE TABLE Alunno
         nome            varchar(16) NOT NULL,
         cognome         varchar(16) NOT NULL,
         data_nascita    date NOT NULL,
-        sostegno        bit(1),
+        sostegno        enum('si', 'no'),
         PRIMARY KEY     (CF)
     );
 
@@ -18,7 +18,7 @@ CREATE TABLE Insegnante
         nome            varchar(16) NOT NULL,
         cognome         varchar(16) NOT NULL,
         data_nascita    date NOT NULL,
-        di_ruolo        bit(1),
+        di_ruolo        enum('si', 'no'),
         materia         bit(1),
         PRIMARY KEY     (CF)
     );
@@ -28,11 +28,9 @@ CREATE TABLE Scuola
         id              varchar(16) NOT NULL AUTO_INCREMENT,
         nome            varchar(16) NOT NULL,
         telefono        int  UNSIGNED NOT NULL,
-        tipo            varchar(16) NOT NULL,
-        tempoPieno      bit(1),
+        tipo            enum('SI', 'SP', 'SS'),
+        tempoPieno      enum('si', 'no'),
         PRIMARY KEY     (id)
-        #CHECK           (tipo = 'SI' OR tipo = 'SP' OR tipo = 'SS')
-        #ricordarsi di mettere il vincolo di integrità tempo pieno null se tipo='SI'
     );
 
 CREATE TABLE Plesso
@@ -40,7 +38,7 @@ CREATE TABLE Plesso
         id              int NOT NULL AUTO_INCREMENT,
         indirizzo       varchar(16) NOT NULL,
         piani           int UNSIGNED NOT NULL,
-        ascensore       bit(1),
+        ascensore       enum('si', 'no'),
         PRIMARY KEY     (id)
     );
 
