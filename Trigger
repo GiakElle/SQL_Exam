@@ -31,7 +31,7 @@ CREATE TRIGGER CheckMaxSud
   FOR EACH ROW
   IF(NEW.mq<OLD.mq AND NEW.max:stud<OLD.max:stud)
   THEN RISE AN ERROR;
-
+  END IF;// 
   
 -----------------------------------------------------------------------------
            
