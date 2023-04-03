@@ -64,7 +64,7 @@ CREATE TABLE Aula
     (
         id              INT UNSIGNED NOT NULL AUTO_INCREMENT,
         mq              int UNSIGNED NOT NULL,
-        #max:sud        int UNSIGNED NOT NULL,
+        maxStud        int UNSIGNED NOT NULL,
         nome_fasciaEtà  varchar(16) NOT NULL,
         piano           int UNSIGNED NOT NULL,
         id_plesso       int NOT NULL,
