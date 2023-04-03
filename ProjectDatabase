@@ -66,6 +66,7 @@ CREATE TABLE Aula
         mq              int UNSIGNED NOT NULL,
         #max:sud        int UNSIGNED NOT NULL,
         nome_fasciaEtà  varchar(16) NOT NULL,
+        piano           int UNSIGNED NOT NULL,
         id_plesso       int NOT NULL,
         PRIMARY KEY     (id),
         FOREIGN KEY     (nome_fasciaEtà) REFERENCES FasciaEtà(nome),
@@ -89,6 +90,7 @@ CREATE TABLE Assegnamento
         id_classe       int  UNSIGNED NOT NULL,
         id_aula         int UNSIGNED NOT NULL,
         AnnoScol        int UNSIGNED NOT NULL,
+        numerosa        enum('si','no')
         PRIMARY KEY     (id_classe, id_aula, AnnoScol),
         FOREIGN KEY     (id_classe) REFERENCES Classe(id),
         FOREIGN KEY     (id_aula) REFERENCES Aula(id)
