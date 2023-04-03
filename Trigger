@@ -5,7 +5,7 @@ CREATE TRIGGER CheckNumerosa
   FOR EACH ROW
     IF(25=(SELECT count(*)
              FROM StoricoIScrizione as s
-             WHERE s.id_classe=NEW.id_calsse AND S.AnnoScol=NEW.AnnoScol ))
+             WHERE s.id_classe=NEW.id_classe AND S.AnnoScol=NEW.AnnoScol ))
     THEN
       UPDATE Assegnamento
       SET numerosa='si'
@@ -18,11 +18,11 @@ CREATE TRIGGER CheckNumerosa2
   FOR EACH ROW
     IF(24=(SELECT count(*)
              FROM StoricoIScrizione as s
-             WHERE s.id_classe=OLD.id_calsse AND S.AnnoScol=OLD.AnnoScol ))
+             WHERE s.id_classe=OLD.id_classe AND S.AnnoScol=OLD.AnnoScol ))
     THEN
       UPDATE Assegnamento
       SET numerosa='no'
-      WHERE s.id_classe=OLD.id_calsse AND S.AnnoScol=OLD.AnnoScol;
+      WHERE s.id_classe=OLD.id_classe AND S.AnnoScol=OLD.AnnoScol;
     END IF;// 
 -----------------------------------------------------------------------------
            
