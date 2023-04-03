@@ -3,7 +3,7 @@ DELIMITER //
 CREATE TRIGGER CheckNumerosa
   AFTER INSERT ON StoricoIscrizione
   FOR EACH ROW
-    IF(25==(SELECT count(*)
+    IF(25=(SELECT count(*)
              FROM StoricoIScrizione as s
              WHERE s.id_classe=NEW.id_calsse AND S.AnnoScol=NEW.AnnoScol ))
     THEN
@@ -16,7 +16,7 @@ CREATE TRIGGER CheckNumerosa
 CREATE TRIGGER CheckNumerosa2
   AFTER DELETE ON StoricoIscrizione
   FOR EACH ROW
-    IF(24==(SELECT count(*)
+    IF(24=(SELECT count(*)
              FROM StoricoIScrizione as s
              WHERE s.id_classe=OLD.id_calsse AND S.AnnoScol=OLD.AnnoScol ))
     THEN
@@ -50,7 +50,7 @@ THEN RAISE AN ERROR;
 CREATE TRIGGER CheckSostegno
   AFTER INSERT ON StoricoIscrizione
   FOR EACH ROW
-  IF(NEW.sostegno==null)
+  IF(NEW.sostegno=null)
   THEN sostegno = 'no';
   
 -----------------------------------------------------------------------------
