@@ -30,7 +30,7 @@ CREATE TRIGGER CheckMaxSud
   AFTER UPDATE ON Aula
   FOR EACH ROW
   IF(NEW.mq<OLD.mq AND NEW.maxStud<OLD.maxStud)
-  THEN RISE AN ERROR;
+  THEN RAISE AN ERROR;
   END IF;// 
   
 -----------------------------------------------------------------------------
@@ -43,7 +43,7 @@ CREATE TRIGGER CheckCapienza
      WHERE X.id_classe=NEW.id_classe and X.AnnoScol=NEW.AnnoScol and Y.id_aula=Y.id)=(SELECT Count(*)
                                                                                       FROM storicoiscrizione as s
                                                                                       WHERE s.id_calsse=NEW.id_classe and s.AnnoScol = NEW.AnnoScol))
-THEN RISE AN ERROR;
+THEN RAISE AN ERROR;
 
 -----------------------------------------------------------------------------
            
@@ -61,7 +61,7 @@ CREATE TRIGGER Piano
   IF(NEW.piano>(SELECT piani
                 FROM plesso
                 WHERE plesso.id = NEW.id_plesso))
-THEN RISE AN ERROR;
+THEN RAISE AN ERROR;
 
 -----------------------------------------------------------------------------
            
@@ -70,7 +70,7 @@ CREATE TRIGGER CheckCF
   FOR EACH ROW
   IF()
   
-THEN RISE AN ERROR;
+THEN RAISE AN ERROR;
                 
 -----------------------------------------------------------------------------
            
