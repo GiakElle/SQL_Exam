@@ -55,7 +55,7 @@ CREATE TABLE Classe
         id              int UNSIGNED NOT NULL AUTO_INCREMENT,
         numero          int UNSIGNED NOT NULL,
         lettera         varchar(16) NOT NULL,
-        id_scuola       varchar(16) NOT NULL,
+        id_scuola       int NOT NULL,
         PRIMARY KEY     (id),
         FOREIGN KEY     (id_scuola) REFERENCES Scuola(id)
     );
@@ -86,7 +86,7 @@ CREATE TABLE Insegna
 
 CREATE TABLE Assegnamento
     (
-        id_classe       varchar(16) NOT NULL,
+        id_classe       int NOT NULL,
         id_aula         int UNSIGNED NOT NULL,
         AnnoScol        int UNSIGNED NOT NULL,
         PRIMARY KEY     (id_classe, id_aula, AnnoScol),
