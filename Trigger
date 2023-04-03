@@ -1,3 +1,5 @@
+DELIMITER //
+
 CREATE TRIGGER CheckNumerosa
   AFTER INSERT ON StoricoIscrizione
   FOR EACH ROW
@@ -7,8 +9,8 @@ CREATE TRIGGER CheckNumerosa
     THEN
       UPDATE Assegnamento
       SET numerosa='si'
-      WHERE s.id_classe=NEW.id_calsse AND S.AnnoScol=NEW.AnnoScol;
-      
+      WHERE s.id_classe=NEW.id_classe AND S.AnnoScol=NEW.AnnoScol;
+    END IF;//
 -----------------------------------------------------------------------------
 
 CREATE TRIGGER CheckNumerosa2
@@ -21,7 +23,7 @@ CREATE TRIGGER CheckNumerosa2
       UPDATE Assegnamento
       SET numerosa='no'
       WHERE s.id_classe=OLD.id_calsse AND S.AnnoScol=OLD.AnnoScol;
-  
+    END IF;// 
 -----------------------------------------------------------------------------
            
 CREATE TRIGGER CheckMaxSud
@@ -29,6 +31,7 @@ CREATE TRIGGER CheckMaxSud
   FOR EACH ROW
   IF(NEW.mq<OLD.mq AND NEW.max:stud<OLD.max:stud)
   THEN RISE AN ERROR;
+
   
 -----------------------------------------------------------------------------
            
@@ -72,3 +75,6 @@ THEN RISE AN ERROR;
 -----------------------------------------------------------------------------
            
 CREATE TRIGGER     
+
+
+DELIMITER //
