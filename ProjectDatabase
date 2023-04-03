@@ -25,7 +25,7 @@ CREATE TABLE Insegnante
 
 CREATE TABLE Scuola
     (
-        id              varchar(16) NOT NULL AUTO_INCREMENT,
+        id              int NOT NULL AUTO_INCREMENT,
         nome            varchar(16) NOT NULL,
         telefono        int  UNSIGNED NOT NULL,
         tipo            enum('SI', 'SP', 'SS'),
