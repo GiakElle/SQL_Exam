@@ -1,0 +1,74 @@
+CREATE TRIGGER CheckNumerosa
+  AFTER INSERT ON StoricoIscrizione
+  FOR EACH ROW
+    IF(25==(SELECT count(*)
+             FROM StoricoIScrizione as s
+             WHERE s.id_classe=NEW.id_calsse AND S.AnnoScol=NEW.AnnoScol ))
+    THEN
+      UPDATE Assegnamento
+      SET numerosa='si'
+      WHERE s.id_classe=NEW.id_calsse AND S.AnnoScol=NEW.AnnoScol;
+      
+-----------------------------------------------------------------------------
+
+CREATE TRIGGER CheckNumerosa2
+  AFTER DELETE ON StoricoIscrizione
+  FOR EACH ROW
+    IF(24==(SELECT count(*)
+             FROM StoricoIScrizione as s
+             WHERE s.id_classe=OLD.id_calsse AND S.AnnoScol=OLD.AnnoScol ))
+    THEN
+      UPDATE Assegnamento
+      SET numerosa='no'
+      WHERE s.id_classe=OLD.id_calsse AND S.AnnoScol=OLD.AnnoScol;
+  
+-----------------------------------------------------------------------------
+           
+CREATE TRIGGER CheckMaxSud
+  AFTER UPDATE ON Aula
+  FOR EACH ROW
+  IF(NEW.mq<OLD.mq AND NEW.max:stud<OLD.max:stud)
+  THEN RISE AN ERROR;
+  
+-----------------------------------------------------------------------------
+           
+CREATE TRIGGER CheckCapienza
+  BEFORE INSERT ON StoricoIscrizione
+  FOR EACH ROW
+  IF((SELECT max:stud
+     FROM assegnamento as X, aula as Y
+     WHERE X.id_classe=NEW.id_classe and X.AnnoScol=NEW.AnnoScol and Y.id_aula=Y.id)=(SELECT Count(*)
+                                                                                      FROM storicoiscrizione as s
+                                                                                      WHERE s.id_calsse=NEW.id_classe and s.AnnoScol = NEW.AnnoScol))
+THEN RISE AN ERROR;
+
+-----------------------------------------------------------------------------
+           
+CREATE TRIGGER CheckSostegno
+  AFTER INSERT ON StoricoIscrizione
+  FOR EACH ROW
+  IF(NEW.sostegno==null)
+  THEN sostegno = 'no';
+  
+-----------------------------------------------------------------------------
+           
+CREATE TRIGGER Piano
+  BEFORE UPDATE ON Aula
+  FOR EACH ROW
+  IF(NEW.piano>(SELECT piani
+                FROM plesso
+                WHERE plesso.id = NEW.id_plesso))
+THEN RISE AN ERROR;
+
+-----------------------------------------------------------------------------
+           
+CREATE TRIGGER CheckCF
+  BEFORE INSERT ON StoricoIscrizione
+  FOR EACH ROW
+  IF()
+  
+THEN RISE AN ERROR;
+                
+-----------------------------------------------------------------------------
+           
+CREATE TRIGGER     
