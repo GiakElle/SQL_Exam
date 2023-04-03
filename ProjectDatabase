@@ -86,7 +86,7 @@ CREATE TABLE Insegna
 
 CREATE TABLE Assegnamento
     (
-        id_classe       int NOT NULL,
+        id_classe       int  UNSIGNED NOT NULL,
         id_aula         int UNSIGNED NOT NULL,
         AnnoScol        int UNSIGNED NOT NULL,
         PRIMARY KEY     (id_classe, id_aula, AnnoScol),
