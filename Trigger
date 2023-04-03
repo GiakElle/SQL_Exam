@@ -53,6 +53,7 @@ CREATE TRIGGER CheckSostegno
   FOR EACH ROW
   IF(NEW.sostegno=null)
   THEN sostegno = 'no';
+  END IF;// 
   
 -----------------------------------------------------------------------------
            
