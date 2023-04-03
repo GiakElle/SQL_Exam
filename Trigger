@@ -29,7 +29,7 @@ CREATE TRIGGER CheckNumerosa2
 CREATE TRIGGER CheckMaxSud
   AFTER UPDATE ON Aula
   FOR EACH ROW
-  IF(NEW.mq<OLD.mq AND NEW.max:stud<OLD.max:stud)
+  IF(NEW.mq<OLD.mq AND NEW.maxStud<OLD.maxStud)
   THEN RISE AN ERROR;
   END IF;// 
   
