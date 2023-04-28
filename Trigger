@@ -1,5 +1,6 @@
 DELIMITER //
 
+--1
 CREATE TRIGGER CheckNumerosa
   AFTER INSERT ON StoricoIscrizione
   FOR EACH ROW
@@ -13,6 +14,7 @@ CREATE TRIGGER CheckNumerosa
     END IF;//
 -----------------------------------------------------------------------------
 
+--2
 CREATE TRIGGER CheckNumerosa2
   AFTER DELETE ON StoricoIscrizione
   FOR EACH ROW
@@ -26,15 +28,17 @@ CREATE TRIGGER CheckNumerosa2
     END IF;// 
 -----------------------------------------------------------------------------
            
+--3        
 CREATE TRIGGER CheckMaxSud
   AFTER UPDATE ON Aula
   FOR EACH ROW
-  IF(NEW.mq<OLD.mq AND NEW.maxStud<OLD.maxStud)
+  IF(NEW.mq<OLD.mq AND NEW.maxStud>OLD.maxStud)
   THEN SIGNAL SQLSTATE '45000' set message_text = 'An error occurred';
   END IF;// 
   
 -----------------------------------------------------------------------------
-           
+
+--4
 CREATE TRIGGER CheckCapienza
   BEFORE INSERT ON StoricoIscrizione
   FOR EACH ROW
@@ -42,43 +46,183 @@ CREATE TRIGGER CheckCapienza
      FROM assegnamento as X, aula as Y
      WHERE X.id_classe=NEW.id_classe and X.AnnoScol=NEW.AnnoScol and Y.id_aula=Y.id)=(SELECT Count(*)
                                                                                       FROM storicoiscrizione as s
-                                                                                      WHERE s.id_calsse=NEW.id_classe and s.AnnoScol = NEW.AnnoScol))
+                                                                                      WHERE s.id_classe=NEW.id_classe and s.AnnoScol = NEW.AnnoScol))
   THEN SIGNAL SQLSTATE '45000' set message_text = 'An error occurred';
   END IF;// 
   
 -----------------------------------------------------------------------------
-           
+
+--5           
 CREATE TRIGGER CheckSostegno
   AFTER INSERT ON StoricoIscrizione
   FOR EACH ROW
   IF(NEW.sostegno=null)
-  THEN sostegno = 'no';
+    THEN sostegno = 'no';
   END IF;// 
   
 -----------------------------------------------------------------------------
-           
+
+--6           
 CREATE TRIGGER Piano
-  BEFORE UPDATE ON Aula
+  BEFORE INSERT ON Aula
   FOR EACH ROW
   IF(NEW.piano>(SELECT piani
                 FROM plesso
                 WHERE plesso.id = NEW.id_plesso))
-  THEN SIGNAL SQLSTATE '45000' set message_text = 'An error occurred';
+  THEN SIGNAL SQLSTATE '45000' set message_text = 'Piano sbagliato';
   END IF;// 
 
 -----------------------------------------------------------------------------
-           
+
+--7          
 CREATE TRIGGER CheckCF
   BEFORE INSERT ON StoricoIscrizione
   FOR EACH ROW
-  IF()
+  IF(0<(SELECT *
+        FROM insegnante as i
+        WHERE NEW.id_alunno = i.cf ))
   
   THEN SIGNAL SQLSTATE '45000' set message_text = 'An error occurred';
   END IF;// 
                 
 -----------------------------------------------------------------------------
-           
-CREATE TRIGGER     
 
+--8          
+CREATE TRIGGER studentiMQ
+  BEFORE INSERT ON aula
+  FOR EACH ROW
+  IF(NEW.max_stud>(SELECT max_stud
+                   FROM aula as a
+                   WHERE NEW.mq < a.mq))
+  
+  THEN SIGNAL SQLSTATE '45000' set message_text = 'An error occurred';
+  END IF;//      
 
+-----------------------------------------------------------------------------
+
+--9          
+CREATE TRIGGER AulaAnnoSol
+  BEFORE INSERT ON Assegnamento
+  FOR EACH ROW
+  IF(0<(SELECT *
+               FROM assegnamento as a
+               WHERE new.id_aula =a.id_aula AND a.AnnoScol=NEW.AnnoScol AND a.id_classe<>NEW.id_classe))
+  
+  THEN SIGNAL SQLSTATE '45000' set message_text = "troppe classi assegante ad un'aula";
+  END IF;//      
+
+-----------------------------------------------------------------------------
+
+--10          
+CREATE TRIGGER studenteClasse
+  BEFORE INSERT ON storicoiscrizione
+  FOR EACH ROW
+  IF(0<(SELECT *
+        FROM  StoricoIscrizione AS s
+        WHERE s.id_alunno= NEW.id_alunno AND s.AnnoScol=NEW.AnnoScol AND s.id_classe<>NEW.id_classe))
+  
+  THEN SIGNAL SQLSTATE '45000' set message_text = 'uno studente può iscriversi solo ad una classe';
+  END IF;//      
+
+-----------------------------------------------------------------------------
+
+--11          
+CREATE TRIGGER
+  BEFORE INSERT ON StoricoIscrizione
+  FOR EACH ROW
+  IF(25>(SELECT count(*)
+         FROM storicoiscrizione as S
+         WHERE new.id_classe=s.id.classe and new.annoscol=s.annoscol))
+  
+  THEN SIGNAL SQLSTATE '45000' set message_text = 'errore numero studenti';
+  END IF;//      
+
+-----------------------------------------------------------------------------
+
+--11b          
+CREATE TRIGGER
+  BEFORE DELETE ON StoricoIscrizione
+  FOR EACH ROW
+  IF(15>(SELECT count(*)
+         FROM storicoiscrizione as S
+         WHERE OLD.id_classe=s.id.classe and OLD.annoscol=s.annoscol))
+  
+  THEN SIGNAL SQLSTATE '45000' set message_text = 'errore numero studenti';
+  END IF;//      
+
+-----------------------------------------------------------------------------
+
+--12          
+CREATE TRIGGER
+  BEFORE INSERT ON classe
+  FOR EACH ROW
+  IF(0<(SELECT *
+        FROM classe as c
+        WHERE new.annoscol=c.annoscol AND new.sezione=c.sezione and new.id_scuola=c.id_scuola and new.id<>c.id))
+  
+  THEN SIGNAL SQLSTATE '45000' set message_text = 'An error occurred';
+  END IF;//      
+
+-----------------------------------------------------------------------------
+
+--13          
+CREATE TRIGGER CheckElevetor
+  BEFORE INSERT ON plesso
+  FOR EACH ROW
+  IF(2<(SELECT piani
+        FROM plesso
+        WHERE plesso.id = NEW.id) AND (SELECT ascensore
+                                       FROM plesso
+                                       WHERE plesso.id = NEW.id) = 'no')
+  
+  THEN SIGNAL SQLSTATE '45000' set message_text = 'Ascensore necessario';
+  END IF;// 
+                
+-----------------------------------------------------------------------------
+
+--14          
+CREATE TRIGGER
+  BEFORE INSERT ON insegna
+  FOR EACH ROW
+  IF(0<(SELECT count(*)
+        FROM insegna as i
+        WHERE new.id_classe=i.id_classe and new.annoscol=i.annoscol and new.id_ins<>i.id_ins))
+  
+  THEN SIGNAL SQLSTATE '45000' set message_text = "L' insegnate insegna in due classi";
+  END IF;//      
+
+-----------------------------------------------------------------------------
+
+--15          
+CREATE TRIGGER
+  BEFORE DELETE ON insegna
+  FOR EACH ROW
+  IF(1>(SELECT *
+        FROM insegnante as x insegna as y
+        WHERE y.ID_CLASSE=OLD.id_classe and x.cf=OLD.id_ins and y.annoscol=OLD.annoscol and x.di_ruolo='si'))  
+  THEN SIGNAL SQLSTATE '45000' set message_text = 'An error occurred';
+  END IF;//      
+
+-----------------------------------------------------------------------------
+
+--16          
+CREATE TRIGGER
+  BEFORE INSERT ON insegna
+  FOR EACH ROW
+  IF(2<(SELECT *
+        FROM insegnante as x insegna as y
+        WHERE y.ID_CLASSE=new.id_classe and x.cf=new.id_ins and y.annoscol=new.annoscol and x.di_ruolo='si'))  
+  THEN SIGNAL SQLSTATE '45000' set message_text = 'An error occurred';
+  END IF;//       
+
+-----------------------------------------------------------------------------
+
+--17          
+CREATE TRIGGER
+  IF()
+  
+  THEN SIGNAL SQLSTATE '45000' set message_text = 'E’ necessario associare un docente di sostegno alla classe';
+  END IF;//      
+
+-----------------------------------------------------------------------------
 DELIMITER //
