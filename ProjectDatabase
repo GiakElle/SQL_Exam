@@ -42,6 +42,13 @@ CREATE TABLE Plesso
         PRIMARY KEY     (id)
     );
 
+CREATE TABLE RangeFasciaEtà
+    (   nome        enum('infante', 'bambino','fanciullo', 'adolescente'),
+        inzio       int UNSIGNED NOT NULL,
+        fine        int UNSIGNED NOT NULL,
+        PRIMARY KEY     (nome),
+    );
+
 CREATE TABLE Classe
     (
         id              int UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -98,12 +105,5 @@ CREATE TABLE StoricoIscrizione
         FOREIGN KEY     (id_alunno) REFERENCES Alunno(CF),
         FOREIGN KEY     (id_classe) REFERENCES Classe(id)
     );
-    
-CREATE TABLE RangeFasciaEtà
-    (   nome        enum('infante', 'bambino','fanciullo', 'adolescente'),
-        inzio       int UNSIGNED NOT NULL,
-        fine        int UNSIGNED NOT NULL,
-        PRIMARY KEY     (nome),
-    );
-  
+     
 describe tables;
