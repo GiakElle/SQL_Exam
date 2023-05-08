@@ -42,14 +42,6 @@ CREATE TABLE Plesso
         PRIMARY KEY     (id)
     );
 
-CREATE TABLE FasciaEtà
-    (
-        nome            varchar(16) NOT NULL,
-        min             int UNSIGNED NOT NULL,
-        max             int UNSIGNED NOT NULL,
-        PRIMARY KEY     (nome)
-    );
-
 CREATE TABLE Classe
     (
         id              int UNSIGNED NOT NULL AUTO_INCREMENT,
