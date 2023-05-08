@@ -65,7 +65,7 @@ CREATE TABLE Aula
         id              INT UNSIGNED NOT NULL AUTO_INCREMENT,
         mq              int UNSIGNED NOT NULL,
         max_stud        int UNSIGNED NOT NULL,
-        nome_fasciaEtà  varchar(16) NOT NULL,
+        fasciaEtà       enum('infante', 'bambino','fanciullo', 'adolescente'),
         piano           int UNSIGNED NOT NULL,
         id_plesso       int NOT NULL,
         PRIMARY KEY     (id),
@@ -106,5 +106,13 @@ CREATE TABLE StoricoIscrizione
         FOREIGN KEY     (id_alunno) REFERENCES Alunno(CF),
         FOREIGN KEY     (id_classe) REFERENCES Classe(id)
     );
-
+    
+CREATE TABLE FasciaEtà
+    (   nome        enum('infante', 'bambino','fanciullo', 'adolescente'),
+        inzio       int UNSIGNED NOT NULL,
+        fine        int UNSIGNED NOT NULL,
+        PRIMARY KEY     (nome),
+        FOREIGN KEY     (nome) REFERENCES Aula(fasciaEtà)
+    );
+  
 describe tables;
