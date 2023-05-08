@@ -107,7 +107,7 @@ CREATE TABLE StoricoIscrizione
         FOREIGN KEY     (id_classe) REFERENCES Classe(id)
     );
     
-CREATE TABLE FasciaEtà
+CREATE TABLE RangeFasciaEtà
     (   nome        enum('infante', 'bambino','fanciullo', 'adolescente'),
         inzio       int UNSIGNED NOT NULL,
         fine        int UNSIGNED NOT NULL,
