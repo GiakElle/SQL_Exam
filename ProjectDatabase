@@ -46,7 +46,7 @@ CREATE TABLE RangeFasciaEtà
     (   nome        enum('infante', 'bambino','fanciullo', 'adolescente'),
         inzio       int UNSIGNED NOT NULL,
         fine        int UNSIGNED NOT NULL,
-        PRIMARY KEY     (nome),
+        PRIMARY KEY     (nome)
     );
 
 CREATE TABLE Classe
