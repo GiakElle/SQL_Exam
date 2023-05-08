@@ -218,8 +218,33 @@ CREATE TRIGGER
 -----------------------------------------------------------------------------
 
 --17          
-CREATE TRIGGER
-  IF()
+CREATE TRIGGER CheckEtà
+  BEFORE INSERT ON StoricoIscrizione
+  FOR EACH ROW
+  IF(((select YEAR(NOW())-YEAR(data_nascita)
+       from Alunno 
+       where Alunno.cf = New.id_alunno) > (select x.fine
+                                           from RangeFasciaEtà as x, Assegnamento as y, Aula as z
+                                           WHERE NEW.id_classe=y.id_assegnamento and y.id_aula=z.id and z.fasciaEtà = x.nome)) or  
+     ((select YEAR(NOW())-YEAR(data_nascita)
+       from Alunno 
+       where Alunno.cf = New.id_alunno) < (select x.inizio
+                                           from RangeFasciaEtà as x, Assegnamento as y, Aula as z
+                                           WHERE NEW.id_classe=y.id_assegnamento and y.id_aula=z.id and z.fasciaEtà = x.nome)))
+  THEN SIGNAL SQLSTATE '45000' set message_text = 'An error occurred';
+  END IF;//       
+
+-----------------------------------------------------------------------------
+
+--18         
+CREATE TRIGGER CheckSostegno
+  BEFORE INSERT ON StoricoIscrizione
+  FOR EACH ROW
+  IF("si"=(SELECT sostegno
+      FROM Alunno
+      WHERE alunno.cf = new.id_alunno) and (1>('sostegno'=(select x.materia
+                                            from insegnante as x, insegna as y
+                                            where y.id_classe=new.id_classe and y.id_insegnante=x.cf))))
   
   THEN SIGNAL SQLSTATE '45000' set message_text = 'E’ necessario associare un docente di sostegno alla classe';
   END IF;//      
