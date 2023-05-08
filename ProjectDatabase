@@ -68,7 +68,7 @@ CREATE TABLE Aula
         piano           int UNSIGNED NOT NULL,
         id_plesso       int NOT NULL,
         PRIMARY KEY     (id),
-        FOREIGN KEY     (fasciaEtà) REFERENCES FasciaEtà(nome),
+        FOREIGN KEY     (fasciaEtà) REFERENCES RangeFasciaEtà(nome),
         FOREIGN KEY     (id_plesso) REFERENCES Plesso(id)
     );
 
