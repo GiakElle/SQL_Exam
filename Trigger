@@ -32,7 +32,7 @@ CREATE TRIGGER CheckNumerosa2
 CREATE TRIGGER CheckMaxSud
   AFTER UPDATE ON Aula
   FOR EACH ROW
-  IF(NEW.mq<OLD.mq AND NEW.maxStud>OLD.maxStud)
+  IF(NEW.mq<OLD.mq AND NEW.max_Stud>OLD.max_Stud)
   THEN SIGNAL SQLSTATE '45000' set message_text = 'An error occurred';
   END IF;// 
   
@@ -52,12 +52,15 @@ CREATE TRIGGER CheckCapienza
   
 -----------------------------------------------------------------------------
 
---5           
-CREATE TRIGGER CheckSostegno
-  AFTER INSERT ON StoricoIscrizione
+--5          
+CREATE TRIGGER SostegnoNotNULL
+  AFTER INSERT ON Alunno
   FOR EACH ROW
-  IF(NEW.sostegno=null)
-    THEN sostegno = 'no';
+  IF(NEW.sostegno is null)
+  THEN UPDATE Aulunno
+        SET sostegno = 'no'
+        WHERE alunno.cf = new.cf;
+
   END IF;// 
   
 -----------------------------------------------------------------------------
@@ -127,7 +130,7 @@ CREATE TRIGGER studenteClasse
 -----------------------------------------------------------------------------
 
 --11          
-CREATE TRIGGER
+CREATE TRIGGER numMinStud
   BEFORE INSERT ON StoricoIscrizione
   FOR EACH ROW
   IF(25>(SELECT count(*)
@@ -140,7 +143,7 @@ CREATE TRIGGER
 -----------------------------------------------------------------------------
 
 --11b          
-CREATE TRIGGER
+CREATE TRIGGER numMaxStud
   BEFORE DELETE ON StoricoIscrizione
   FOR EACH ROW
   IF(15>(SELECT count(*)
@@ -153,12 +156,12 @@ CREATE TRIGGER
 -----------------------------------------------------------------------------
 
 --12          
-CREATE TRIGGER
+CREATE TRIGGER CheckUnicitaClassi
   BEFORE INSERT ON classe
   FOR EACH ROW
   IF(0<(SELECT *
         FROM classe as c
-        WHERE new.annoscol=c.annoscol AND new.sezione=c.sezione and new.id_scuola=c.id_scuola and new.id<>c.id))
+        WHERE new.anno=c.anno AND new.lettera=c.lettera and new.id_scuola=c.id_scuola and new.id<>c.id))
   
   THEN SIGNAL SQLSTATE '45000' set message_text = 'An error occurred';
   END IF;//      
@@ -181,7 +184,7 @@ CREATE TRIGGER CheckElevetor
 -----------------------------------------------------------------------------
 
 --14          
-CREATE TRIGGER
+CREATE TRIGGER CheckInsegnati
   BEFORE INSERT ON insegna
   FOR EACH ROW
   IF(0<(SELECT count(*)
@@ -194,11 +197,11 @@ CREATE TRIGGER
 -----------------------------------------------------------------------------
 
 --15          
-CREATE TRIGGER
+CREATE TRIGGER CheckRuolo
   BEFORE DELETE ON insegna
   FOR EACH ROW
   IF(1>(SELECT *
-        FROM insegnante as x insegna as y
+        FROM insegnante as x, insegna as y
         WHERE y.ID_CLASSE=OLD.id_classe and x.cf=OLD.id_ins and y.annoscol=OLD.annoscol and x.di_ruolo='si'))  
   THEN SIGNAL SQLSTATE '45000' set message_text = 'An error occurred';
   END IF;//      
@@ -206,11 +209,11 @@ CREATE TRIGGER
 -----------------------------------------------------------------------------
 
 --16          
-CREATE TRIGGER
+CREATE TRIGGER CheckRuolo2
   BEFORE INSERT ON insegna
   FOR EACH ROW
   IF(2<(SELECT *
-        FROM insegnante as x insegna as y
+        FROM insegnante as x, insegna as y
         WHERE y.ID_CLASSE=new.id_classe and x.cf=new.id_ins and y.annoscol=new.annoscol and x.di_ruolo='si'))  
   THEN SIGNAL SQLSTATE '45000' set message_text = 'An error occurred';
   END IF;//       
@@ -250,4 +253,4 @@ CREATE TRIGGER CheckSostegno
   END IF;//      
 
 -----------------------------------------------------------------------------
-DELIMITER //
+DELIMITER ;
